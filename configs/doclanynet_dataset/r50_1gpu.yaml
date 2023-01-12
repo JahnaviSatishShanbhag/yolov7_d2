@@ -4,6 +4,7 @@ _BASE_: "../Base-YOLOv7.yaml"
 MODEL:
   META_ARCHITECTURE: "YOLOV7"
   WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  # WEIGHTS: ""
   MASK_ON: False
   BACKBONE:
     NAME: "build_resnet_fpn_backbone"
@@ -20,7 +21,7 @@ MODEL:
         [[85.0, 106.0], [63.0, 79.0], [115.0, 143.0]],
         [[46.0, 56.0], [31.0, 37.0], [17.0, 19.0]],
       ]
-    CLASSES: 2
+    CLASSES: 11
     IN_FEATURES: ["p3", "p4", "p5"] # p3, p4, p5 from FPN
     CONF_THRESHOLD: 0.1
     NMS_THRESHOLD: 0.1
@@ -31,17 +32,20 @@ MODEL:
       LAMBDA_CONF: 0.8
 DATASETS:
   TRAIN: ("doclaynet_train",)
-  TEST: ("doclaynet_train",)
+  TEST: ("doclaynet_val",)
 
 SOLVER:
-  IMS_PER_BATCH: 10
-  BASE_LR: 0.02
+  IMS_PER_BATCH: 32
+  BASE_LR: 0.001
   STEPS: (70000, 90000)
   MAX_ITER: 100000
   CHECKPOINT_PERIOD: 5000
+  
+TEST:
+  EVAL_PERIOD: 5000
 
-OUTPUT_DIR: "/kaggle/working/"
+OUTPUT_DIR: "/kaggle/working/output"
 
 DATALOADER:
   # proposals are part of the dataset_dicts, and take a lot of RAM
-  NUM_WORKERS: 5
+  NUM_WORKERS: 6
